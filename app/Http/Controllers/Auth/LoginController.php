@@ -23,13 +23,17 @@ class LoginController extends Controller
 
         // Attempt to log the user in
         if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->intended('/dashboard'); // Redirect to intended page or dashboard
+
+            // Redirect to the discover page
+            return redirect('/discover');
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
+            'password' => 'The password you entered is incorrect.',
         ]);
     }
+
 
     public function logout()
     {

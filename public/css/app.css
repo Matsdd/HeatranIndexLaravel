@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.modal {
+    display: none; /* Hide by default */
+    position: fixed; /* Stay in place */
+    z-index: 1050; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-dialog {
+    position: relative;
+    margin: 1.75rem auto; /* Center the modal */
+    max-width: 500px; /* Optional: set a max width */
+}
+
+.modal-content {
+    background-color: white;
+    border: 1px solid #888;
+    border-radius: 0.5rem;
+    padding: 20px;
+}
