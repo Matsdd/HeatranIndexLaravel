@@ -16,7 +16,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register');
 
-Route::get('/profile', [ProfileController::class, 'user'])->name('profile')->middleware('auth');
+Route::get('/profile', [ProfileController::class, 'user'])->middleware('auth')->name('profile');
 
 
 Route::middleware('admin')->group(function () {
@@ -26,7 +26,10 @@ Route::middleware('admin')->group(function () {
 Route::resource('cards', CardController::class)->middleware('auth');
 Route::get('/discover', [CardController::class, 'discover'])->name('cards.discover');
 Route::get('/cards/{card}', [CardController::class, 'show']);
+Route::get('/cards/{card}/edit', [CardController::class, 'edit'])->name('cards.edit')->middleware('auth');
+Route::put('/cards/{card}', [CardController::class, 'update'])->name('cards.update')->middleware('auth');
 Route::get('/create', [CardController::class, 'create'])->name('cards.create')->middleware('auth');
+Route::delete('/cards/{card}', [CardController::class, 'destroy'])->name('cards.destroy')->middleware('auth');
 
 Route::post('/store', [CardController::class, 'store'])->name('cards.store')->middleware('auth');
 Route::post('/cards/{card}/favorite', [CardController::class, 'favorite'])->name('cards.favorite');

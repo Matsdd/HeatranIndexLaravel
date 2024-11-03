@@ -11,42 +11,60 @@
 <body class="bg-gray-800 text-white">
 <div id="app">
     <nav class="bg-gray-900 p-4 border-b border-white">
-        <ul class="flex justify-center space-x-8 text-gray-200 font-semibold text-lg">
-            @auth
-                <li>
-                    <a href="{{ route('profile') }}" class="px-4 py-2 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
-                        Binder
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('cards.create') }}" class="px-4 py-2 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
-                        Create
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('cards.discover') }}" class="px-4 py-2 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
-                        Discover
-                    </a>
-                </li>
-                <li>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="px-4 py-2 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
-                            Logout
-                        </button>
-                    </form>
-                </li>
-            @else
-                <li>
-                    <a href="{{ route('login') }}" class="px-4 py-2 border border-black rounded hover:border-white transition-colors duration-200">
-                        Login
-                    </a>
-                </li>
-            @endauth
+        <ul class="flex items-center justify-between text-gray-200 font-semibold text-lg">
+            <!-- Left side of the navbar -->
+            <div class="flex space-x-8">
+                @auth
+                    <li>
+                        <a href="{{ route('profile') }}" class="px-10 py-4 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
+                            Binder
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cards.create') }}" class="px-10 py-4 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
+                            Create
+                        </a>
+                    </li>
+                @endauth
+            </div>
+
+            <!-- Centered Pokéball icon -->
+            <li class="flex justify-center">
+                <a href="{{ route('cards.discover') }}">
+                    <img src="{{ asset('images/PokeBall.png') }}" alt="Discover" class="w-20 h-20">
+                </a>
+            </li>
+
+            <!-- Right side of the navbar -->
+            <div class="flex items-center space-x-8">
+                @auth
+                    <li>
+                        <span class="text-white">Welcome, {{ auth()->user()->name }}!</span>
+                    </li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="px-10 py-4 bg-gray-800 border border-black rounded hover:border-white transition-colors duration-200">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                @else
+                    <!-- Show Login and Register links if not authenticated -->
+                    <li>
+                        <a href="{{ route('login') }}" class="px-10 py-4 border border-black rounded hover:border-white transition-colors duration-200">
+                            Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('register') }}" class="px-10 py-4 border border-black rounded hover:border-white transition-colors duration-200">
+                            Register
+                        </a>
+                    </li>
+                @endauth
+            </div>
         </ul>
     </nav>
-
-
 
     <main class="py-4">
         @yield('content')
