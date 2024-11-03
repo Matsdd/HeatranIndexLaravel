@@ -160,10 +160,44 @@
                                 deleteButton.classList.add('hidden');
                             }
 
+                            // Add event listeners to favorite/unfavorite buttons
+                            addFavoriteListeners(cardId);
+
                             // Show the modal
                             modal.classList.remove('hidden');
                         })
                         .catch(error => console.error('Error fetching card details:', error));
+                }
+
+                // Function to add favorite/unfavorite event listeners
+                function addFavoriteListeners(cardId) {
+                    // Favorite button click handler
+                    favoriteButton.onclick = function () {
+                        fetch(`/cards/${cardId}/favorite`, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    favoriteButton.classList.add('hidden');
+                                    unfavoriteButton.classList.remove('hidden');
+                                }
+                            });
+                    };
+
+                    // Unfavorite button click handler
+                    unfavoriteButton.onclick = function () {
+                        fetch(`/cards/${cardId}/unfavorite`, {
+                            method: 'DELETE',
+                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    unfavoriteButton.classList.add('hidden');
+                                    favoriteButton.classList.remove('hidden');
+                                }
+                            });
+                    };
                 }
 
                 // Function to delete a card

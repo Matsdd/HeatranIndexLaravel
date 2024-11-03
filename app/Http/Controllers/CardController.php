@@ -57,8 +57,8 @@ class CardController extends Controller
 
     public function edit(Card $card)
     {
-        // Check if the authenticated user owns this card
-        if (auth()->id() !== $card->user_id) {
+        // Allow access if the user is an admin or the owner of the card
+        if (auth()->user()->role !== 'admin' && auth()->id() !== $card->user_id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -67,11 +67,12 @@ class CardController extends Controller
 
     public function update(Request $request, Card $card)
     {
-        // Validate and authorize update action
-        if (auth()->id() !== $card->user_id) {
+        // Allow update if the user is an admin or the owner of the card
+        if (auth()->user()->role !== 'admin' && auth()->id() !== $card->user_id) {
             abort(403, 'Unauthorized action.');
         }
 
+        // Validation for the card fields
         $request->validate([
             'name' => 'required|string|max:255',
             'Rarity' => 'required|string|max:50',
@@ -80,10 +81,10 @@ class CardController extends Controller
             'Language' => 'required|string|max:255',
             'Stamped' => 'required|string|max:255',
             'CardMarketLink' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Optional image field
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Image is optional on update
         ]);
 
-        // Update fields
+        // Update card fields
         $card->name = $request->name;
         $card->Rarity = $request->Rarity;
         $card->Era = $request->Era;
@@ -92,13 +93,14 @@ class CardController extends Controller
         $card->Stamped = $request->Stamped;
         $card->CardMarketLink = $request->CardMarketLink;
 
-        // If a new image is uploaded, replace the old one
+        // Handle new image upload
         if ($request->hasFile('image')) {
-            // Delete the old image
+            // Delete old image
             if ($card->image_path) {
                 Storage::disk('public')->delete($card->image_path);
             }
-            // Store the new image
+
+            // Store new image
             $path = $request->file('image')->store('cards', 'public');
             $card->image_path = $path;
         }
@@ -107,6 +109,7 @@ class CardController extends Controller
 
         return redirect()->route('cards.discover')->with('success', 'Card updated successfully!');
     }
+
 
     public function discover(Request $request)
     {
