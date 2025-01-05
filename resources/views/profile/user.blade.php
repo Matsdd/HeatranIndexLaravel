@@ -4,12 +4,31 @@
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-bold mb-4">{{ $user->name }}'s Profile</h2>
 
+        @if(session('error'))
+            <div class="bg-red-500 text-white p-4 rounded mb-4">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <h3 class="text-xl font-semibold mb-2">Profile Picture</h3>
         @if($user->profile_picture)
-            <img src="{{ Storage::url($user->profile_picture) }}" alt="{{ $user->name }}" class="rounded-full w-32 h-32 object-cover mb-4">
+            <img src="{{ route('profile.picture', ['filename' => auth()->user()->profile_picture]) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover">
+            <form action="{{ route('profile-picture.remove') }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Remove Profile Picture</button>
+            </form>
         @else
             <p class="text-gray-400">No profile picture uploaded</p>
         @endif
+
+        <form action="{{ route('profile-picture.upload') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+            @csrf
+            <label for="profile_picture" class="block text-gray-700">Upload Profile Picture:</label>
+            <input type="file" name="profile_picture" id="profile_picture" class="block w-full text-gray-700 mt-2 mb-4">
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Upload</button>
+        </form>
+
 
         <h3 class="text-xl font-semibold mb-2">Favorite Cards</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

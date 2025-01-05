@@ -9,10 +9,17 @@ class AdminMiddleware
 {
     public function handle($request, Closure $next)
     {
+        // Check if the user is authenticated and has the admin role
         if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request);
+            return $next($request);  // Allow the request to continue
         }
 
-        return redirect('/'); // Redirect to home if not admin
+        // Prevent redirect loop by checking if the user is already on the discover page
+        if ($request->is('discover') || $request->is('discover/*')) {
+            return $next($request);  // If they're already on the discover page, allow the request
+        }
+
+        // Redirect non-admin users to the discover page
+        return redirect('/discover');
     }
 }

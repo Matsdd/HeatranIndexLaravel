@@ -52,6 +52,12 @@ class CardController extends Controller
 
     public function create()
     {
+        $user = auth()->user();
+
+        if (!$user->profile_picture) {
+            return redirect()->route('profile')->with('error', 'You must upload a profile picture to create a card.');
+        }
+
         return view('cards.create');
     }
 

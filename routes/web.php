@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 
 // Login Routes
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -17,11 +18,15 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register'])->name('register');
 
 Route::get('/profile', [ProfileController::class, 'user'])->middleware('auth')->name('profile');
+Route::post('/profile-picture/upload', [ProfileController::class, 'uploadProfilePicture'])->name('profile-picture.upload');
+Route::delete('/profile-picture/remove', [ProfileController::class, 'removeProfilePicture'])->name('profile-picture.remove');
+Route::get('/profile-picture/{filename}', [ProfileController::class, 'getProfilePicture'])
+    ->name('profile.picture')
+    ->middleware(['auth']);
 
-
-Route::middleware('admin')->group(function () {
-    Route::get('/admin/cards', [CardController::class, 'adminIndex']);
-});
+Route::get('/admin/cards', [CardController::class, 'adminIndex']);
+Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
+Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.deleteUser');
 
 Route::resource('cards', CardController::class)->middleware('auth');
 Route::get('/discover', [CardController::class, 'discover'])->name('cards.discover');
